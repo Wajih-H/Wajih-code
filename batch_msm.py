@@ -1,8 +1,8 @@
 """
-    Send passive jobs to frioul using frioul_batch command.
+    Send passive jobs.
 
 
-    /hpc/soft/anaconda3/bin/python /hpc/banco/hermi.w/scripts/frioul_batch_msm.py
+    /../anaconda3/bin/python /../hermi.w/scripts/frioul_batch_msm.py
 """
 
 import pandas
@@ -14,8 +14,8 @@ import subprocess
 import datetime as dt
 
 
-def MSM_on_frioul(tgt_sub, src_sub, h, lvl, smth, conf_f, log_dir):
-    """ Create a new job on frioul that run MSMessai.sh """
+def MSM_job(tgt_sub, src_sub, h, lvl, smth, conf_f, log_dir):
+    """ Create a new job that run MSMessai.sh """
     # Get current date and time
     d = dt.datetime.now()
     d_str = d.strftime("%Y%m%d_%H%M%S")
@@ -25,14 +25,14 @@ def MSM_on_frioul(tgt_sub, src_sub, h, lvl, smth, conf_f, log_dir):
     outdir = "dataMSM/MSM_beta/MSM_SameTransform_PCA/{}to{}_{}_lvl-{}_s-{}_cnf-{}".format(src_sub, tgt_sub, h, lvl, smth, conf_name)
     outemplate_fname = "{}to{}_{}_lvl-{}_s-{}_cnf-{}.".format(src_sub, tgt_sub, h, lvl, smth, conf_name)
 
-    # Shell command that will be run on the frioul's node (in the passive job)
-    cmd = "/hpc/banco/hermi.w/scripts/MSMessai.sh {} {} {} {} {} {} {} {}".format(src_sub, tgt_sub, h, lvl, smth, conf_f, outdir, outemplate_fname)
+    # Shell command that will be run (in the passive job)
+    cmd = "/hermi.w/scripts/MSMessai.sh {} {} {} {} {} {} {} {}".format(src_sub, tgt_sub, h, lvl, smth, conf_f, outdir, outemplate_fname)
         
     # Template for log filenames (stdout, stderr, stdcmd)
     std = log_dir + "/{}_%jobid%_msm_{}to{}_{}_lvl-{}_s-{}_cnf-{}.".format(d_str, src_sub, tgt_sub, h, lvl, smth, conf_name)
 
-    # Frioul_batch command (run on the head of frioul)
-    fb_cmd = "mkdir {} -p; frioul_batch \"{}\"  -C {}cmd -O {}out -E {}err".format(log_dir, cmd, std, std, std)
+    # batch command 
+    fb_cmd = "mkdir {} -p; batch \"{}\"  -C {}cmd -O {}out -E {}err".format(log_dir, cmd, std, std, std)
 
     # Print and execute
     print(fb_cmd)
@@ -40,7 +40,7 @@ def MSM_on_frioul(tgt_sub, src_sub, h, lvl, smth, conf_f, log_dir):
 
 
 def main():
-    """ Launch many MSM jobs on frioul testing all the parameters on several subjects """
+    """ Launch many MSM jobs testing all the parameters on several subjects """
     # Subjects to process
     subnums = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,37,38,39,40,41,42]
     #subnums = [3]
@@ -81,7 +81,7 @@ def main():
     hemis = ['lh']
 
     # Where the log files will write
-    log_dir = "/hpc/banco/hermi.w/logs"
+    log_dir = "/hermi.w/logs"
 
     # For each target subject
     #for tgts in target_subnums:
@@ -102,7 +102,7 @@ def main():
                      # Each hemisphere
                     for h in hemis:
                         # Create a new job
-                        MSM_on_frioul(target_subnums, source_sub, h, level, smoothing, config_file, log_dir)
+                        MSM_job(target_subnums, source_sub, h, level, smoothing, config_file, log_dir)
 
 if __name__ == "__main__":                        
     main()
