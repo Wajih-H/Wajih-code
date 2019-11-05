@@ -9,9 +9,9 @@ conf=$6
 savedir=$7
 outtemplate=$8
 
-hcp_outdir=/hpc/banco/hermi.w/data/fs_db/fsavg6_beta_gii
-fsldir=/hpc/soft/fsl/fsl_6.0.1/bin
-mydirname=/hpc/banco/hermi.w
+outdir=/hermi.w/data/fs_db/fsavg6_beta_gii
+fsldir=/fsl/fsl_6.0.1/bin
+mydirname=/hermi.w
 
 
 mkdir -p $mydirname/$savedir
